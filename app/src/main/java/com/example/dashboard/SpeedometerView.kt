@@ -13,11 +13,11 @@ class SpeedometerView @JvmOverloads constructor(
 ) : View(context, attrs) {
 
     private var currentSpeed = 0f
-    private var displayedSpeed = 0f  // animated value shown on screen
+    private var displayedSpeed = 0f
     private val maxSpeed = 180f
 
-    private val startAngle = 135f   // gauge starts bottom-left
-    private val sweepAngle = 270f   // sweeps clockwise to bottom-right
+    private val startAngle = 135f
+    private val sweepAngle = 270f
 
     private val arcRect = RectF()
 
@@ -84,28 +84,31 @@ class SpeedometerView @JvmOverloads constructor(
         val cx = width / 2f
         val cy = height / 2f
 
-        // Background track
+
         canvas.drawArc(arcRect, startAngle, sweepAngle, false, trackPaint)
 
-        // Colored progress arc — green -> yellow -> red based on speed ratio
-        val ratio = displayedSpeed / maxSpeed
+
+        val speedpercent = displayedSpeed / maxSpeed
         progressPaint.color = when {
-            ratio < 0.5f -> Color.parseColor("#34C759")
-            ratio < 0.8f -> Color.parseColor("#FFCC00")
+            speedpercent < 0.5f -> Color.parseColor("#34C759")
+            speedpercent < 0.8f -> Color.parseColor("#FFCC00")
             else -> Color.parseColor("#FF3B30")
         }
-        canvas.drawArc(arcRect, startAngle, sweepAngle * ratio, false, progressPaint)
+        canvas.drawArc(arcRect, startAngle, sweepAngle * speedpercent, false, progressPaint)
 
-        // Needle
-        val needleAngleDeg = startAngle + sweepAngle * ratio
-        val needleAngleRad = Math.toRadians(needleAngleDeg.toDouble())
+
+        val needleAngle = startAngle + sweepAngle * speedpercent
+        val needleAngleRad = Math.toRadians(needleAngle.toDouble())
         val needleLength = arcRect.width() / 2f - 20f
         val needleX = cx + needleLength * Math.cos(needleAngleRad).toFloat()
         val needleY = cy + needleLength * Math.sin(needleAngleRad).toFloat()
         canvas.drawLine(cx, cy, needleX, needleY, needlePaint.apply { strokeWidth = 8f; style = Paint.Style.STROKE })
         canvas.drawCircle(cx, cy, 18f, centerDotPaint)
 
-        // Speed text in the center
+
+
+
+
         canvas.drawText(displayedSpeed.toInt().toString(), cx, cy + textPaint.textSize * 0.35f, textPaint)
         canvas.drawText("km/h", cx, cy + textPaint.textSize * 0.35f + unitPaint.textSize + 12f, unitPaint)
     }

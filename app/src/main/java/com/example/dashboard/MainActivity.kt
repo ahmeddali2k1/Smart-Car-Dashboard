@@ -9,9 +9,7 @@ import org.json.JSONObject
 import java.util.Locale
 
 class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
-
-    // --- CHANGE THIS to your PC's IP, or "10.0.2.2" for the emulator ---
-    private val brokerUrl = "tcp://192.168.178.143:1883"
+    private val brokerUrl = "tcp://100.86.189.168:1883"
     private lateinit var tvAlertBanner: TextView
     private lateinit var mqttClient: MqttAsyncClient
     private lateinit var tts: TextToSpeech
@@ -173,7 +171,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         bannerHandler.removeCallbacks(hideBannerRunnable)
         tvAlertBanner.alpha = 1f
         tvAlertBanner.visibility = android.view.View.VISIBLE
-        bannerHandler.postDelayed(hideBannerRunnable, 3000) // visible for 3 seconds
+        bannerHandler.postDelayed(hideBannerRunnable, 3000)
     }
 
     override fun onDestroy() {
